@@ -1,5 +1,5 @@
 import re
-""" New Class is being generated For better experience"""
+""" New Class is being generated For better experience. This is going to be fun"""
 def getAttr(text,tag,attr):
 	reString = '<{0}[^>]*>'.format(tag)
 	tag_re = re.compile(reString,re.S)
