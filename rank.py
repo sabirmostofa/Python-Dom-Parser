@@ -100,6 +100,9 @@ class node:
 		self.node=tag
 	
 	def attr(self,attr):
+		attrString='(?<={0}=").*?(?=")'.format(attr)
+		attr_re =  re.compile(attrString,re.S)
+		return attr_re.search(self.node).group()
 		 
 
 class parser:
@@ -135,7 +138,7 @@ class parser:
 	
 
 
-a= parser(a[0]).getByTag('updated')[0]
+a= parser(a[0]).getByTag('link')[0].attr('href')
 
 print a
 
