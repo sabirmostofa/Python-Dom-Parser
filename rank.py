@@ -96,13 +96,22 @@ print innerText('im:price',a[0]);
 #Reinventing the wheel, A class for parsing HTML XML DOM
 
 class node:
-	def __init__(self,tag):
+	def __init__(self,tag,tagName=None,motherdoc=None):
 		self.node=tag
+		self.tagName = tagName
+		self.doc =motherdoc
+		
 	
 	def attr(self,attr):
 		attrString='(?<={0}=").*?(?=")'.format(attr)
 		attr_re =  re.compile(attrString,re.S)
 		return attr_re.search(self.node).group()
+	
+	def innerText(self):
+		#For inner values
+		reString = '(?<=<{0})[^>]*>(.*?)(?=</{0}>)'.format(self.tagName)	
+		tag_re = re.compile(reString,re.S)
+		return tag_re.search(self.doc).group(1) 
 		 
 
 class parser:
@@ -122,8 +131,11 @@ class parser:
 		attr_re =  re.compile(attrString,re.S)
 		tags = re.findall(attr_re, self.doc)
 		
+		
+		
+		
 		def callNode(x):
-			return node(x)
+			return node(x,tag,self.doc)
 			
 		if(len(tags)>0):
 			return map(callNode,tags)
@@ -148,8 +160,9 @@ class parser:
 
 ex= parser(a[0]).getByTag('link')[0].attr('href')
 b= parser(a[0]).getById('hellosA')
+print parser(raw_string).getByTag('updated')[0].innerText()
 
-print b
+
 
 print 'after init'
 
