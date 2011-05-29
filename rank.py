@@ -115,7 +115,7 @@ class parser:
 		self.elems =  re.findall(tag_re, self.doc)
 		
 	def count(self):
-		return len(self.elems )
+		return len(self.elems)
 		
 	def getByTag(self,tag):
 		attrString = '<{0}.*?>'.format(tag)
@@ -127,7 +127,15 @@ class parser:
 			
 		if(len(tags)>0):
 			return map(callNode,tags)
-				
+	
+	def getById(self,idS):
+		idStr =  'id="{0}"'.format(idS)
+		attr_re =  re.compile(idStr,re.S)
+	
+		for elem in self.elems:
+			if(attr_re.search(elem)!=None):
+				return attr_re.search(elem).group()
+			
 		
 
 		
@@ -138,9 +146,10 @@ class parser:
 	
 
 
-a= parser(a[0]).getByTag('link')[0].attr('href')
+ex= parser(a[0]).getByTag('link')[0].attr('href')
+b= parser(a[0]).getById('hellosA')
 
-print a
+print b
 
 print 'after init'
 
