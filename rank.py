@@ -4,6 +4,7 @@ import urllib2
 import re
 import htmlentitydefs
 import HTMLParser
+import spp
 
 
 #function copied from Internet
