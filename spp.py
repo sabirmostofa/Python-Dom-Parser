@@ -56,8 +56,10 @@ class node:
         if(self.num!=-1):
             return matches[self.num]
         else:
-            return matches[0]
-         
+            reString = '(?<=<{0}).*?\sid=(?:"|\')?{1}(?:"|\')?[^>]*>(.*?)(?=</{0}>)'.format(self.tagName,self.ida)    
+            tag_re = re.compile(reString,re.S)
+            matches = re.findall(tag_re,self.doc)
+            return matches[0]         
 
 class parser:
     """Instantiate this class like 
@@ -109,6 +111,7 @@ class parser:
                 tag = re.search(r'<(.*?)\s',elem).group(1)
                 obj=node(elem,tag,self.doc)
                 obj.num=-1
+                obj.ida=idS
                 return obj
                 
                 
