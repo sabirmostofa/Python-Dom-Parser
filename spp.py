@@ -33,87 +33,88 @@ import re
 import urllib2
 
 class node:
-	def __init__(self,tag,tagName=None,motherdoc=None):
-		self.node=tag
-		self.tagName = tagName
-		self.doc =motherdoc
-		
-		
-	
-	def attr(self,attr):
-		"""supporting  id="test" | id='test' | id=test"""
-		attrString='((?<={0}=").*?(?="))|((?<={0}=\').*?(?=\'))|((?<={0}=)[^\'"]+?(?=\s|>))'.format(attr)
-		attr_re =  re.compile(attrString,re.S)
-		return attr_re.search(self.node).group()
-	
-	def innerText(self):
-		"""Returns the Node Content: It returns only the single node content 
-		So user this function to the node which has no childs
-		"""
-		reString = '(?<=<{0})[^>]*>(.*?)(?=</{0}>)'.format(self.tagName)	
-		tag_re = re.compile(reString,re.S)
-		matches = re.findall(tag_re,self.doc)
-		if(self.num!=-1):
-			return matches[self.num]
-		else:
-			return matches
-		 
+    def __init__(self,tag,tagName=None,motherdoc=None):
+        self.node=tag
+        self.tagName = tagName
+        self.doc =motherdoc
+        
+        
+    
+    def attr(self,attr):
+        """supporting  id="test" | id='test' | id=test"""
+        attrString='((?<={0}=").*?(?="))|((?<={0}=\').*?(?=\'))|((?<={0}=)[^\'"]+?(?=\s|>))'.format(attr)
+        attr_re =  re.compile(attrString,re.S)
+        return attr_re.search(self.node).group()
+    
+    def innerText(self):
+        """Returns the Node Content: It returns only the single node content 
+        So user this function to the node which has no childs
+        """
+        reString = '(?<=<{0})[^>]*>(.*?)(?=</{0}>)'.format(self.tagName)    
+        tag_re = re.compile(reString,re.S)
+        matches = re.findall(tag_re,self.doc)
+        if(self.num!=-1):
+            return matches[self.num]
+        else:
+            return matches[0]
+         
 
 class parser:
-	"""Instantiate this class like 
-	spp.parser(doc)
-	doc can be either xml|http document string or a URL 
-	You can chain the methods """
-	doc=''
-	#elems is the total number of tags
-	elems=''
-	
-	def __init__(self,doc):
-		if(re.search(r'^http://',doc)):
-			req = urllib2.Request(doc)
-			self.doc = urllib2.urlopen(req).read()
-		else:
-			self.doc=doc
-		tag_re = re.compile(r'<(?!/).*?>',re.S)
-		self.elems =  re.findall(tag_re, self.doc)
-		
-	def count(self):
-		return len(self.elems)
-		
-	def getByTag(self,tag):
-		attrString = '<{0}.*?>'.format(tag)
-		attr_re =  re.compile(attrString,re.S)
-		tags = re.findall(attr_re, self.doc)
-				
-		def callNode(x):
-			return node(x,tag,self.doc)
-			
-		if(len(tags)>0):
-			self.tagObjs= map(callNode,tags)
-		return self
-		
-	def getById(self,idS):
-		idStr =  '(id="{0}")|(id={0})|(id=\'{0}\')'.format(idS)
-		attr_re =  re.compile(idStr,re.S)
-		
-		def getNum(single,allE):
-			count=0
-			for i in allE:
-				if (i==single):
-					return count
-				count=count+1
-			
-	
-		for elem in self.elems:
-			if(attr_re.search(elem)!=None):				
-				tag = re.search(r'<(.*?)\s',elem).group(1)
-				obj=node(elem,tag,self.doc)
-				return getNum(elem,self.elems)
-				
-				
-				
-	def item(self,no):
-		"""Returns a Node object and sets the number"""
-		self.tagObjs[no].num=no
-		return self.tagObjs[no]
-		
+    """Instantiate this class like 
+    spp.parser(doc)
+    doc can be either xml|http document string or a URL 
+    You can chain the methods """
+    doc=''
+    #elems is the total number of tags
+    elems=''
+    
+    def __init__(self,doc):
+        if(re.search(r'^http://',doc)):
+            req = urllib2.Request(doc)
+            self.doc = urllib2.urlopen(req).read()
+        else:
+            self.doc=doc
+        tag_re = re.compile(r'<(?!/).*?>',re.S)
+        self.elems =  re.findall(tag_re, self.doc)
+        
+    def count(self):
+        return len(self.elems)
+        
+    def getByTag(self,tag):
+        attrString = '<{0}.*?>'.format(tag)
+        attr_re =  re.compile(attrString,re.S)
+        tags = re.findall(attr_re, self.doc)
+                
+        def callNode(x):
+            return node(x,tag,self.doc)
+            
+        if(len(tags)>0):
+            self.tagObjs= map(callNode,tags)
+        return self
+        
+    def getById(self,idS):
+        idStr =  '(id="{0}")|(id={0})|(id=\'{0}\')'.format(idS)
+        attr_re =  re.compile(idStr,re.S)
+        
+        def getNum(single,allE):
+            count=0
+            for i in allE:
+                if (i==single):
+                    return count
+                count=count+1
+            
+    
+        for elem in self.elems:
+            if(attr_re.search(elem)!=None):                
+                tag = re.search(r'<(.*?)\s',elem).group(1)
+                obj=node(elem,tag,self.doc)
+                obj.num=-1
+                return obj
+                
+                
+                
+    def item(self,no):
+        """Returns a Node object and sets the number"""
+        self.tagObjs[no].num=no
+        return self.tagObjs[no]
+        
