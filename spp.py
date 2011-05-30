@@ -26,7 +26,6 @@ __author__ = "Sabirul Mostofa"
 __copyright__ = "Copyright 2011"
 __license__ = "GPL V2.0"
 __version__ = "0.1"
-__maintainer__ = "Sabirul Mostofa"
 __email__ = "sabirmostofa@gmail.com"
 __status__ = "Production"
 
