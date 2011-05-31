@@ -42,13 +42,14 @@ class node:
     
     def attr(self,attr):
         """supporting  id="test" | id='test' | id=test"""
-        attrString='((?<={0}=").*?(?="))|((?<={0}=\').*?(?=\'))|((?<={0}=)[^\'"]+?(?=\s|>))'.format(attr)
+        attrString='{0}=(?:"|\')?(.*?)(?:"|\')?(?:\s|>)'.format(attr)
         attr_re =  re.compile(attrString,re.S)
-        return attr_re.search(self.node).group()
+        return attr_re.search(self.node).group(1)
     
     def innerText(self):
         """Returns the Node Content: It returns only the single node content 
-        So user this function to the node which has no childs
+        So use this function for the node which has no child.Using the function for 
+        mother nodes will return unexpected result
         """
         reString = '(?<=<{0})[^>]*>(.*?)(?=</{0}>)'.format(self.tagName)    
         tag_re = re.compile(reString,re.S)
