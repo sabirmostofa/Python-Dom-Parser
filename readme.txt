@@ -2,7 +2,7 @@
 Copy the spp.py in your working directory and import the package.
 
 Sample usage:
- Instantiate the parser class by providing the url  or xml|http string
+ Instantiate the parser class by providing the url  or xml|html string
  
  To Get the 'id' attribute of the 'style' tag
  1.spp.parser('http://www.google.com').getByTag('style').item(0).attr('id')
@@ -17,4 +17,4 @@ Sample usage:
  4.spp.parser(doc).getBytag('img').item(4).attr('src')
  
  To get the content of a node which has no child
- 5.spp.parser(doc).getById('test').innerText(
+ 5.spp.parser(doc).getById('test').innerText()
